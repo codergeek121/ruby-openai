@@ -13,12 +13,10 @@ require_relative "openai/messages"
 require_relative "openai/runs"
 require_relative "openai/run_steps"
 require_relative "openai/audio"
+require_relative "openai/errors"
 require_relative "openai/version"
 
 module OpenAI
-  class Error < StandardError; end
-  class ConfigurationError < Error; end
-
   class Configuration
     attr_writer :access_token
     attr_accessor :api_type, :api_version, :organization_id, :uri_base, :request_timeout,

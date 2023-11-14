@@ -72,6 +72,32 @@ RSpec.describe OpenAI::Client do
             expect(response).not_to be_empty
           end
         end
+
+        it "raises InternalServerError for 500" do
+          stub_request(:post, 'https://api.openai.com/v1/audio/speech').to_return(status: 500)
+
+          response = OpenAI::Client.new.audio.speech(
+            parameters: {
+              model: model,
+              input: "This is a speech test!",
+              voice: "alloy"
+            }
+          )
+        end
+
+        it "raises EngineOverload for 503" do
+          stub_request(:post, 'https://api.openai.com/v1/audio/speech').to_return(status: 503)
+
+          expect do
+            OpenAI::Client.new.audio.speech(
+              parameters: {
+                model: model,
+                input: "This is a speech test!",
+                voice: "alloy"
+              }
+            )
+          end.to raise_error(OpenAI::EngineOverload)
+        end
       end
     end
   end
